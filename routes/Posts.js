@@ -4,6 +4,7 @@ const db = require('../modules/connect-mysql')
 const validateToken = require('../middlewares/AuthMiddleware')
 const upload = require('./../modules/upload')
 
+
 // --[get post list]
 router.get('/', validateToken, async (req, res) => {
   
@@ -16,6 +17,17 @@ router.get('/', validateToken, async (req, res) => {
         el.count_likes=0
       }
       return el
+    })
+
+    const sql4 = "SELECT a.*, COUNT(*) AS count_comment, b.post_id AS count_comment_check FROM `posts` AS a LEFT JOIN comments AS b ON a.id=b.post_id GROUP BY a.id;"
+    let [rows4] = await db.query(sql4)
+  
+    let commentCount = {}
+    rows4.map( el => {
+      if (el.count_comment_check!==null){
+        commentCount[el.id] = el.count_comment
+      }
+      return
     })
 
     let postImagesID = rows.map(el => el.id)
@@ -39,7 +51,7 @@ router.get('/', validateToken, async (req, res) => {
 
     
 
-    return res.json({success: true, posts: rows, likedList, postImages})
+    return res.json({success: true, posts: rows, likedList, postImages, commentCount})
 
   } else {
     return res.json({success: false})
@@ -206,5 +218,6 @@ router.delete('/delete/:pid', async (req, res) => {
   return res.json(output)
 
 })
+
 
 module.exports = router
