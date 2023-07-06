@@ -50,6 +50,7 @@ app.use('/posts', require('./routes/Posts'))
 app.use('/comments', require('./routes/Comments'))
 app.use('/auth', require('./routes/Users'))
 app.use('/likes', require('./routes/Likes'))
+app.use('/reels', require('./routes/Reels'))
 
 app.get('/set-sess', (req, res) => {
   req.session.test2 = {

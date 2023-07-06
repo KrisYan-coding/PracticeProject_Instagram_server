@@ -5,8 +5,8 @@ const validateToken = require('../middlewares/AuthMiddleware')
 const upload = require('./../modules/upload')
 
 
-// --[get post list]
-router.get('/', validateToken, async (req, res) => {
+// --[get home post list ALL]
+router.get('/home-posts', validateToken, async (req, res) => {
   
   if (req.output.success){
     const sql = 'SELECT a.*, b.post_id AS count_likes_check, COUNT(a.id) AS count_likes, c.username AS new_username, c.image FROM `posts` AS a LEFT JOIN `likes` AS b ON a.id=b.post_id LEFT JOIN users AS c ON a.user_id=c.user_id GROUP BY a.id;'
